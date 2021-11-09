@@ -3,7 +3,7 @@ datasources:
   - name: InfluxDB
     type: influxdb
     access: proxy
-    database: iescelia_db
+    database: smart_garden
     user: root
     password: root
     url: http://influxdb:8086

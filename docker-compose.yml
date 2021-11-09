@@ -50,5 +50,5 @@ services:
       - "80:80"
     volumes:
       - ./nginx/nginx_data/html:/usr/share/nginx/html:ro
-      - ./nginx/nginx_data/config/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/nginx_data/config/config.d/default.conf:/etc/nginx/config.d/default.conf
+      - ./nginx/nginx_data/config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx_data/config/config.d/default.conf:/etc/nginx/config.d/default.conf:ro
