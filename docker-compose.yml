@@ -2,13 +2,15 @@ version: '3.5'
 
 services:
   mosquitto:
-    image: eclipse-mosquitto:2
+    image: eclipse-mosquitto:openssl
     container_name: mqtt-mosquitto
+    restart: always
     ports:
-      - '1883:1883'
-      - '8883:8883'
+      - '1883:8883'
+      - '1884:1883'
     volumes:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto/config:/mosquitto/config
       - ./mosquitto/data:/mosquitto/data
       - ./mosquitto/log:/mosquitto/log
 
@@ -29,7 +31,7 @@ services:
     image: telegraf:1.18
     container_name: telegraf
     volumes:
-      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+      - ./telegraf:/etc/telegraf
     depends_on:
       - influxdb
 
@@ -45,7 +47,7 @@ services:
       - influxdb
 
   nginx:
-    image: tobi312/rpi-nginx
+    image: nginx
     container_name: nginx
     ports:
       - "80:80"

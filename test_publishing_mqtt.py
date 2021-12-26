@@ -1,7 +1,10 @@
 import paho.mqtt.client as mqtt
 
 client = mqtt.Client(clean_session=True)
-client.connect("192.168.1.133", 1883, 60)
+# client.tls_set("/Users/saulfranciscoacunagodoy/PycharmProjects/estacion_central/local_credentials/ca.crt", tls_version=2)
+# client.tls_insecure_set(True)
+client.username_pw_set('station', 'station01')
+client.connect("192.168.1.133", 1884, 60)
 # client.publish('garden/node/1/air_temperature', 5.4)
 # client.publish('garden/node/1/air_humidity', 5.4)
 # client.publish('garden/node/1/ground_humidity', 5.4)
