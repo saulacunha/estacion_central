@@ -14,5 +14,5 @@ client.on_message = on_message
 # client.tls_set("/Users/saulfranciscoacunagodoy/PycharmProjects/estacion_central/local_credentials/ca.crt")
 # client.tls_insecure_set(True)
 client.username_pw_set('station', 'station01')
-client.connect("192.168.1.133", 1884, 60)
+client.connect("192.168.1.134", 1883, 60)
 client.loop_forever()

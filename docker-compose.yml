@@ -6,8 +6,8 @@ services:
     container_name: mqtt-mosquitto
     restart: always
     ports:
-      - '1883:8883'
-      - '1884:1883'
+      - '1884:8883'
+      - '1883:1883'
     volumes:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - ./mosquitto/config:/mosquitto/config
@@ -43,15 +43,26 @@ services:
     volumes:
       - ./grafana/grafana_data:/var/lib/grafana
       - ./grafana/grafana-provisioning/:/etc/grafana/provisioning
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
     depends_on:
       - influxdb
 
-  nginx:
-    image: nginx
-    container_name: nginx
-    ports:
-      - "80:80"
+  python:
+    container_name: python
+    build:
+      context: python/conf
+
+  mysql:
+    image: mysql
+    platform: linux/x86_64
+    container_name: estacion-central-mysql
     volumes:
-      - ./nginx/nginx_data/html:/usr/share/nginx/html:ro
-      - ./nginx/nginx_data/config/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/nginx_data/config/config.d/default.conf:/etc/nginx/config.d/default.conf:ro
+      - "./mysql/dumps/web-estacion-central.sql:/docker-entrypoint-initdb.d/web-estacion-central.sql"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "3306:3306"

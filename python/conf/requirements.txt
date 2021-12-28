@@ -1,0 +1,4 @@
+PyMySQL==0.9.2
+django
+djangorestframework
+django-cors-headers
