@@ -9,3 +9,12 @@ datasources:
     url: http://influxdb:8086
     isDefault: true
     editable: true
+
+  - name: MySql
+      type: mysql
+      access: proxy
+      database: web_estacion_central
+      user: root
+      password: root
+      url: http://mysql:3306
+      editable: true

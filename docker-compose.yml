@@ -1,5 +1,9 @@
 version: '3.5'
-
+networks:
+  front-tier:
+    driver: bridge
+  back-tier:
+    driver: bridge
 services:
   mosquitto:
     image: eclipse-mosquitto:openssl
@@ -38,24 +42,36 @@ services:
   grafana:
     image: grafana/grafana:7.4.0
     container_name: grafana
+    restart: always
     ports:
       - '3000:3000'
     volumes:
       - ./grafana/grafana_data:/var/lib/grafana
-      - ./grafana/grafana-provisioning/:/etc/grafana/provisioning
+      - ./grafana/grafana-provisioning:/etc/grafana/provisioning
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
     depends_on:
       - influxdb
+      - mysql
+      - renderer
+    environment:
+      GF_PATHS_CONFIG: /etc/grafana/grafana.ini
+      GF_RENDERING_SERVER_URL: http://renderer:8081/render
+      GF_RENDERING_CALLBACK_URL: http://grafana:3000/
+      GF_LOG_FILTERS: rendering:debug
+      GF_AUTH_ANONYMOUS_ENABLED: true
 
-  python:
-    container_name: python
-    build:
-      context: python/conf
+  renderer:
+    container_name: render_grafana
+    image: grafana/grafana-image-renderer:latest
+    volumes:
+      - ./grafana/render/config.json:/usr/src/app/config.json
+    ports:
+      - '8081:8081'
 
   mysql:
     image: mysql
     platform: linux/x86_64
-    container_name: estacion-central-mysql
+    container_name: mysql
     volumes:
       - "./mysql/dumps/web-estacion-central.sql:/docker-entrypoint-initdb.d/web-estacion-central.sql"
     environment:
